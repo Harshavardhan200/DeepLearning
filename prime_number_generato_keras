@@ -1,0 +1,31 @@
+import numpy as np
+from keras.utils import to_categorical
+from keras.models import Sequential
+from keras.layers import Dense
+
+def generate_dataset(n):
+  data = [i for i in range(2, n)]
+  labels = [1 for _ in range(2, n)]
+  for index, i in enumerate(data):
+      is_prime = False
+      for j in range(2, i):
+          if i % j == 0:
+              labels[index] = 0
+              break
+  
+  return np.array(data), to_categorical(labels)
+def spliting_train_test(x, y, test_size):
+    split = int(len(x)*test_size)
+    xtrain, xtest = x[:split], x[split:]      #spliting the train and test
+    ytrain, ytest = y[:split], y[split:]
+    return xtrain, xtest, ytrain, ytest
+data, labels = generate_dataset(1000)
+xtrain, xtest, ytrain, ytest = spliting_train_test(data, labels, 0.8)
+model = Sequential()
+model.add(Dense(32, input_dim=1, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(2, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.fit(xtrain, ytrain, epochs=10, batch_size=32)
+result = model.predict([6])
+print(to_categorical(result, dtype="uint8"))
