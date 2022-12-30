@@ -1,0 +1,5 @@
+from keras import backend as K
+print("Enter two numbers for addition")
+data = [float(i) for i in list(input().split(" "))]
+result = K.sum(data)
+print(K.eval(result))
